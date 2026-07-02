@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { TodoContextProvider } from './context/TodoContext'
 
 import './App.css'  
@@ -11,8 +11,32 @@ function App() {
   }
   
   const updateTodo = (id, todo) => {
-    setTodos((prev)=> prev.map((prevTodo)=>(prevTodo.id === id ? todo:prevTodo)))
+    setTodos((prev)=> prev.map((prevTodo)=>(prevTodo.id === id ? {...prevTodo, todo:todo}:prevTodo)))
   }
+  // This will update the dodo list, in prev all the previous value comes, with the help of map funciton we iterate to the each and every value present inside prev and each value stored in prevTodo then we take the prevTodo.id if it matched by the id passed then we take that prevTodo part and changes todo in it else keep the same
+
+  const deleteTodo = (id) => {
+    setTodos((prev) => prev.filter((prevTodo) => prevTodo.id !== id))
+  }
+
+  // In this we go to each part and creates new arrau which doesnot contain the id which we have passes
+
+
+  const toggleComplete = () => {
+    setTodo((prev) => prev.map((prevTodo) => (prevTodo.id == id ? {...prevTodo, cpmpleted : prevTodo.toggleCompleted}: prevTodo)))
+  }
+  // This will update the dodo list, in prev all the previous value comes, with the help of map funciton we iterate to the each and every value present inside prev and each value stored in prevTodo then we take the prevTodo.id if it matched by the id passed then we take that prevTodo part and  toggles todo in it else keep the same
+
+  useEffect(() => {
+    const todos = JSON.parse(localStorage.getItem("todos"))
+    if (todos){
+      settodos(todos)
+    }
+  }, [])
+
+  useEffect(() => {
+    const todos = JSON.stringify(localStorage.setItem("todo", todos))
+  }, [todos])
 
   return (
     <TodoContext.Provider value = {{todos, addTodo, updateTodo, deleteTodo, toggleComplete}}>
